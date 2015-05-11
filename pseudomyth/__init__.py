@@ -241,7 +241,7 @@ if not argv[-1] == 'legacy':
         elif episode.parsed:
             series = [s for s in serieslist if s.name == episode.series][0]
             series.append(episode)
-
+#for every series, take all the episodes and add the series to weighted per episode
     weighted = []
     for series in serieslist:
         for episode in series.episodes:
@@ -270,20 +270,31 @@ if not argv[-1] == 'legacy':
             "to exit")
 
     for n in range(len(weighted)):
-        wait()
-
-        series = choice(weighted)
         playlist = []
+        print('select your series')
 
-        series = choice(weighted)
+        options = []
+        numberAssigned = 0
 
-        episode = series.episodes.pop(0)
-        weighted.remove(series)
+        for options in range(0, 6):
+            series = choice(weighted) #choice is RNG, pick a series at random
+            
+            series = choice(weighted)
+            episode = series.episodes[0] #return the first episode of the series
+            
+            options.append(episode) #add our options
+            print('\r[%i] - %s' % numberAssigned+1, episode)
+        
+        #wait() this will return soon to do it properly, but for now...
+        hellaInput = input('Enter series number: ')
+
+        episode = options.pop(hellaInput) #return the first episode of the selected series
+        weighted.remove(series) #remove that episode of the series from weighted - don't know how to work this yet
 
         if series.op:
-            playlist.append(series.op.filename)
+            playlist.append(series.op.filename) #assume series has split OP/ED files from ep
 
-        playlist.append(episode.filename)
+        playlist.append(episode.filename) #add the episode to the playlist
 
         if series.ed:
             playlist.append(series.ed.filename)
